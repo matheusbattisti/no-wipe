@@ -1,0 +1,11 @@
+{
+  "name": "trava-ia",
+  "displayName": "Trava IA",
+  "version": "1.0.0",
+  "description": "Impede o Claude Code de apagar arquivos em massa no Windows, macOS e Linux: barra rm -rf, Remove-Item -Recurse, rd /s e caminhos que viram a raiz do disco antes de rodar.",
+  "author": { "name": "Matheus Battisti", "url": "https://links.horadecodar.com.br" },
+  "homepage": "https://github.com/matheusbattisti/trava-ia",
+  "repository": "https://github.com/matheusbattisti/trava-ia",
+  "license": "MIT",
+  "keywords": ["seguranca", "security", "hooks", "windows", "rm-rf", "delete-protection"]
+}

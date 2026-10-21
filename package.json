@@ -1,0 +1,14 @@
+{
+  "name": "trava-ia",
+  "version": "1.0.0",
+  "description": "Um arquivo de regras que protege seu PC de IA apagando arquivos: gera a configuração do Claude Code, Codex, Cursor, Copilot CLI e Antigravity.",
+  "bin": { "trava-ia": "bin/trava-ia.mjs" },
+  "files": ["bin", "scripts", "test", "hooks", "skills", ".claude-plugin", "protecao-ia.padrao.json", "README.md", "LICENSE"],
+  "scripts": { "test": "node test/testar-hook.mjs" },
+  "engines": { "node": ">=18" },
+  "keywords": ["claude-code", "codex", "cursor", "copilot", "antigravity", "ai-agents", "security", "windows", "rm-rf"],
+  "author": "Matheus Battisti",
+  "license": "MIT",
+  "homepage": "https://github.com/matheusbattisti/trava-ia",
+  "repository": { "type": "git", "url": "git+https://github.com/matheusbattisti/trava-ia.git" }
+}

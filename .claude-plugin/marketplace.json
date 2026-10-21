@@ -1,0 +1,8 @@
+{
+  "name": "trava-ia",
+  "description": "Proteção contra IA apagando arquivos",
+  "owner": { "name": "Matheus Battisti" },
+  "plugins": [
+    { "name": "trava-ia", "source": "./", "description": "Barra comandos de apagar em massa antes de rodar." }
+  ]
+}
