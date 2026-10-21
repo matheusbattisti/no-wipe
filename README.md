@@ -18,7 +18,15 @@ O plugin instala um hook que roda antes de todo comando de terminal (Bash e Powe
 
 Pastas descartáveis (`node_modules`, `dist`, `.next`...) continuam podendo ser apagadas por caminho simples dentro do projeto.
 
-Dentro do Claude Code, `/trava-ia:configurar` cria as regras no projeto.
+Dentro do Claude Code, `/trava-ia:trava-ia` cria as regras no projeto.
+
+## Instalar como skill (Claude Code, Codex, Cursor e outros)
+
+```
+npx skills add matheusbattisti/trava-ia
+```
+
+A skill ensina o agente a criar e atualizar o `protecao-ia.json` com o pacote `trava-ia`.
 
 ## Usar com qualquer IA
 

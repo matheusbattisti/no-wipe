@@ -1,5 +1,5 @@
 ---
-name: configurar
+name: trava-ia
 description: Configura a proteção do trava-ia no projeto atual, gerando as regras de segurança do Claude Code, Codex, Cursor, Copilot CLI e Antigravity a partir de um arquivo protecao-ia.json. Use quando o usuário pedir para proteger o projeto ou o PC contra a IA apagar arquivos, ou para mudar o que fica bloqueado.
 ---
 

@@ -1,6 +1,6 @@
 {
   "name": "trava-ia",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Um arquivo de regras que protege seu PC de IA apagando arquivos: gera a configuração do Claude Code, Codex, Cursor, Copilot CLI e Antigravity.",
   "bin": { "trava-ia": "bin/trava-ia.mjs" },
   "files": ["bin", "scripts", "test", "hooks", "skills", ".claude-plugin", "protecao-ia.padrao.json", "README.md", "LICENSE"],
