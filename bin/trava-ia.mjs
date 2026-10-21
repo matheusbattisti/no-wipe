@@ -96,7 +96,7 @@ function checar(texto) {
   const r = spawnSync(process.execPath, [HOOK], {
     input: JSON.stringify({ tool_name: "Bash", tool_input: { command: texto } }),
     encoding: "utf8",
-    env: { ...process.env, CLAUDE_PROJECT_DIR: process.cwd() },
+    env: { ...process.env, CLAUDE_PROJECT_DIR: process.cwd(), TRAVA_IA_SEM_LOG: "1" },
   });
   if (r.status === 2) {
     console.log("\x1b[31mBLOQUEADO\x1b[0m  " + texto);

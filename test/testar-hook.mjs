@@ -50,7 +50,7 @@ for (const [cmd, esp] of casos) {
   const r = spawnSync("node", [HOOK], {
     input: JSON.stringify({ tool_name: "Bash", tool_input: { command: cmd }, cwd: tmpdir() }),
     encoding: "utf8",
-    env: { ...process.env, CLAUDE_PROJECT_DIR: tmpdir() },
+    env: { ...process.env, CLAUDE_PROJECT_DIR: tmpdir(), TRAVA_IA_SEM_LOG: "1" },
   });
   const got = r.status === 2 ? "BLOQ" : r.status === 0 ? "OK" : "ERR" + r.status;
   const ok = got === esp;

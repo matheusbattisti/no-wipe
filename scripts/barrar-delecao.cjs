@@ -111,6 +111,7 @@ function sinaisDeCaminhoQuebrado(comando) {
 }
 
 function registrar(projeto, linha) {
+  if (process.env.TRAVA_IA_SEM_LOG) return;
   try {
     const pasta = path.join(projeto, ".claude");
     fs.mkdirSync(pasta, { recursive: true });
