@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// wipe-guard: PreToolUse hook for Claude Code.
+// no-wipe: PreToolUse hook for Claude Code.
 // Reads the tool call from stdin and blocks (exit 2) bulk-delete commands before they run,
 // including paths that silently resolve to a drive root (empty variable, Windows 8.3 short
 // name like USERNA~1, or C:\ converted to /c/ by Git Bash).
@@ -8,12 +8,18 @@
 const fs = require("fs");
 const path = require("path");
 
-// Rules: the project's wipe-guard.json, then one next to this file, then the bundled default.
+// Optional flags (used by the CLI and the tests): --project <dir> and --no-log.
+const argv = process.argv.slice(2);
+const flag = (name) => { const i = argv.indexOf(name); return i >= 0 ? (argv[i + 1] || true) : undefined; };
+const PROJECT_DIR = flag("--project") || process.env.CLAUDE_PROJECT_DIR;
+const NO_LOG = argv.includes("--no-log");
+
+// Rules: the project's no-wipe.json, then one next to this file, then the bundled default.
 function loadConfig() {
   const candidates = [
-    process.env.CLAUDE_PROJECT_DIR && path.join(process.env.CLAUDE_PROJECT_DIR, "wipe-guard.json"),
-    path.join(__dirname, "wipe-guard.json"),
-    path.join(__dirname, "..", "wipe-guard.default.json"),
+    PROJECT_DIR && path.join(PROJECT_DIR, "no-wipe.json"),
+    path.join(__dirname, "no-wipe.json"),
+    path.join(__dirname, "..", "no-wipe.default.json"),
   ].filter(Boolean);
   for (const file of candidates) {
     try { return JSON.parse(fs.readFileSync(file, "utf8")); } catch { /* try next */ }
@@ -21,14 +27,25 @@ function loadConfig() {
   return {};
 }
 const CONFIG = loadConfig();
-// Messages follow "lang" in the config, then WIPE_GUARD_LANG, then the system language.
-const PT = /^pt/i.test(CONFIG.lang || process.env.WIPE_GUARD_LANG || Intl.DateTimeFormat().resolvedOptions().locale || "");
+// Messages follow "lang" in the config, then --lang, then the system language.
+const PT = /^pt/i.test(CONFIG.lang || flag("--lang") || Intl.DateTimeFormat().resolvedOptions().locale || "");
 const t = (en, pt) => (PT ? pt : en);
-const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-const BLOCK = (CONFIG.block || []).map((c) => ({
-  re: new RegExp("(^|[\\s;&|(\"'])" + c.trim().split(/\s+/).map(escapeRe).join("\\s+") + "(?=\\s|$|[;&|)\"'])", "i"),
-  name: c,
-}));
+// "block" entries are matched word by word: the command is split into segments at ; & | ( )
+// and each segment into words, and an entry matches when its words appear in a row.
+const BLOCK = (CONFIG.block || []).map((c) => ({ words: c.trim().toLowerCase().split(/\s+/), name: c }));
+function commandWords(cmd) {
+  return cmd.toLowerCase().split(/[;&|()\n]+/).map((seg) =>
+    seg.replace(/["'`]/g, " ").trim().split(/\s+/).filter(Boolean));
+}
+function hasSequence(segments, words) {
+  return segments.some((seg) => {
+    for (let i = 0; i + words.length <= seg.length; i++) {
+      if (words.every((w, k) => seg[i + k] === w)) return true;
+    }
+    return false;
+  });
+}
+
 const SAFE_TO_DELETE = new Set((CONFIG.safeToDelete || [
   "node_modules", ".next", "dist", "build", "out", "coverage", ".turbo", ".cache", ".vite", "tmp", "temp",
 ]).map((p) => p.toLowerCase()));
@@ -114,11 +131,11 @@ function pathWarnings(cmd) {
 }
 
 function log(project, line) {
-  if (process.env.WIPE_GUARD_NO_LOG) return;
+  if (NO_LOG) return;
   try {
     const dir = path.join(project, ".claude");
     fs.mkdirSync(dir, { recursive: true });
-    fs.appendFileSync(path.join(dir, "wipe-guard.log"), `[${new Date().toISOString()}] ${line}\n`);
+    fs.appendFileSync(path.join(dir, "no-wipe.log"), `[${new Date().toISOString()}] ${line}\n`);
   } catch { /* logging is optional */ }
 }
 
@@ -126,10 +143,11 @@ function main() {
   const input = readInput();
   const cmd = String(input?.tool_input?.command ?? "");
   if (!cmd.trim()) process.exit(0);
-  const project = process.env.CLAUDE_PROJECT_DIR || input.cwd || process.cwd();
-  const label = t("BLOCKED by wipe-guard", "BLOQUEADO pelo wipe-guard");
+  const project = PROJECT_DIR || input.cwd || process.cwd();
+  const label = t("BLOCKED by no-wipe", "BLOQUEADO pelo no-wipe");
 
-  const banned = BLOCK.find((b) => b.re.test(cmd));
+  const segments = commandWords(cmd);
+  const banned = BLOCK.find((b) => hasSequence(segments, b.words));
   if (banned) {
     log(project, `BLOCKED (${banned.name}): ${cmd}`);
     process.stderr.write(`${label}: "${banned.name}" ${t("is on the blocked list.", "está na lista de comandos proibidos.")}\n${MESSAGE}\n`);

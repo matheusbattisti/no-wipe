@@ -1,8 +1,8 @@
 {
-  "name": "wipe-guard",
+  "name": "no-wipe",
   "description": "Stop AI coding agents from wiping your files",
   "owner": { "name": "Matheus Battisti" },
   "plugins": [
-    { "name": "wipe-guard", "source": "./", "description": "Blocks bulk-delete commands before they run." }
+    { "name": "no-wipe", "source": "./", "description": "Blocks bulk-delete commands before they run." }
   ]
 }

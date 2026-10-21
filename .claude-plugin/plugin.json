@@ -1,11 +1,11 @@
 {
-  "name": "wipe-guard",
-  "displayName": "Wipe Guard",
+  "name": "no-wipe",
+  "displayName": "No Wipe",
   "version": "1.0.0",
   "description": "Stops Claude Code from bulk-deleting files. Blocks rm -rf, Remove-Item -Recurse, rd /s and paths that silently resolve to a drive root before they run. Built for Windows, works everywhere.",
   "author": { "name": "Matheus Battisti", "url": "https://links.horadecodar.com.br" },
-  "homepage": "https://github.com/matheusbattisti/wipe-guard",
-  "repository": "https://github.com/matheusbattisti/wipe-guard",
+  "homepage": "https://github.com/matheusbattisti/no-wipe",
+  "repository": "https://github.com/matheusbattisti/no-wipe",
   "license": "MIT",
   "keywords": ["security", "safety", "hooks", "windows", "rm-rf", "delete-protection"]
 }

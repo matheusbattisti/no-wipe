@@ -1,14 +1,14 @@
 {
-  "name": "wipe-guard",
+  "name": "no-wipe",
   "version": "1.0.0",
   "description": "Stop AI coding agents from wiping your files. One rules file becomes the safety config for Claude Code, Codex, Cursor, Copilot CLI and Antigravity.",
-  "bin": { "wipe-guard": "bin/wipe-guard.mjs" },
-  "files": ["bin", "scripts", "test", "hooks", "skills", ".claude-plugin", "wipe-guard.default.json", "README.md", "LICENSE"],
+  "bin": { "no-wipe": "bin/no-wipe.mjs" },
+  "files": ["bin", "scripts", "test", "hooks", "skills", ".claude-plugin", "no-wipe.default.json", "README.md", "LICENSE"],
   "scripts": { "test": "node test/run-tests.mjs" },
   "engines": { "node": ">=18" },
   "keywords": ["claude-code", "codex", "cursor", "copilot", "antigravity", "ai-agents", "security", "windows", "rm-rf", "delete-protection"],
   "author": "Matheus Battisti",
   "license": "MIT",
-  "homepage": "https://github.com/matheusbattisti/wipe-guard",
-  "repository": { "type": "git", "url": "git+https://github.com/matheusbattisti/wipe-guard.git" }
+  "homepage": "https://github.com/matheusbattisti/no-wipe",
+  "repository": { "type": "git", "url": "git+https://github.com/matheusbattisti/no-wipe.git" }
 }

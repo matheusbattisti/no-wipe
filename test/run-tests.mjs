@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { tmpdir } from "node:os";
 const AQUI = dirname(fileURLToPath(import.meta.url));
-const HOOK = join(AQUI, "..", "scripts", "wipe-guard-hook.cjs");
+const HOOK = join(AQUI, "..", "scripts", "no-wipe-hook.cjs");
 const casos = [
   // [comando, esperado]
   ['Remove-Item -Recurse -Force "$pasta\\*"', "BLOQ"],
@@ -47,10 +47,9 @@ const casos = [
 ];
 let falhas = 0;
 for (const [cmd, esp] of casos) {
-  const r = spawnSync("node", [HOOK], {
+  const r = spawnSync(process.execPath, [HOOK, "--project", tmpdir(), "--no-log"], {
     input: JSON.stringify({ tool_name: "Bash", tool_input: { command: cmd }, cwd: tmpdir() }),
     encoding: "utf8",
-    env: { ...process.env, CLAUDE_PROJECT_DIR: tmpdir(), WIPE_GUARD_NO_LOG: "1" },
   });
   const got = r.status === 2 ? "BLOQ" : r.status === 0 ? "OK" : "ERR" + r.status;
   const ok = got === esp;
