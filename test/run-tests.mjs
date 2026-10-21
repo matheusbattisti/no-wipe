@@ -1,11 +1,11 @@
-// Testa o hook com comandos FALSOS: nada é executado, o hook só lê o texto.
-// Uso: node testar-hook.mjs   (ou node testar-hook.mjs -v para ver as mensagens)
+// Runs the hook against FAKE commands: nothing is executed, the hook only reads the text.
+// Usage: node run-tests.mjs   (add -v to see the messages)
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { tmpdir } from "node:os";
 const AQUI = dirname(fileURLToPath(import.meta.url));
-const HOOK = join(AQUI, "..", "scripts", "barrar-delecao.cjs");
+const HOOK = join(AQUI, "..", "scripts", "wipe-guard-hook.cjs");
 const casos = [
   // [comando, esperado]
   ['Remove-Item -Recurse -Force "$pasta\\*"', "BLOQ"],
@@ -50,13 +50,13 @@ for (const [cmd, esp] of casos) {
   const r = spawnSync("node", [HOOK], {
     input: JSON.stringify({ tool_name: "Bash", tool_input: { command: cmd }, cwd: tmpdir() }),
     encoding: "utf8",
-    env: { ...process.env, CLAUDE_PROJECT_DIR: tmpdir(), TRAVA_IA_SEM_LOG: "1" },
+    env: { ...process.env, CLAUDE_PROJECT_DIR: tmpdir(), WIPE_GUARD_NO_LOG: "1" },
   });
   const got = r.status === 2 ? "BLOQ" : r.status === 0 ? "OK" : "ERR" + r.status;
   const ok = got === esp;
   if (!ok) falhas++;
-  console.log(`${ok ? "OK  " : "ERRO"} ${got === "BLOQ" ? "BLOQUEADO" : "liberado "}  ${cmd}`);
+  console.log(`${ok ? "OK  " : "FAIL"} ${got === "BLOQ" ? "BLOCKED" : "allowed"}  ${cmd}`);
   if (got === "BLOQ" && process.argv[2] === "-v") console.log("   " + r.stderr.trim().replace(/\n/g, "\n   "));
 }
-console.log(falhas ? `\n${falhas} teste(s) com resultado errado` : `\nTodos os ${casos.length} testes deram o resultado esperado.`);
+console.log(falhas ? `\n${falhas} test(s) failed` : `\nAll ${casos.length} tests passed.`);
 process.exit(falhas ? 1 : 0);

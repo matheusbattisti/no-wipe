@@ -7,7 +7,7 @@
           {
             "type": "command",
             "command": "node",
-            "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/barrar-delecao.cjs"],
+            "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/wipe-guard-hook.cjs"],
             "timeout": 10,
             "onFailure": "block"
           }

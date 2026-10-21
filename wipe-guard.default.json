@@ -1,0 +1,5 @@
+{
+  "block": ["git clean", "git reset --hard", "Format-Volume", "Clear-Disk", "diskpart"],
+  "ask": ["rm", "rmdir", "rd", "del", "erase", "Remove-Item", "robocopy", "git push --force"],
+  "safeToDelete": ["node_modules", ".next", "dist", "build", "out", "coverage", ".turbo", ".cache", ".vite", "tmp", "temp"]
+}

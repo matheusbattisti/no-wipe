@@ -1,8 +1,8 @@
 {
-  "name": "trava-ia",
-  "description": "Proteção contra IA apagando arquivos",
+  "name": "wipe-guard",
+  "description": "Stop AI coding agents from wiping your files",
   "owner": { "name": "Matheus Battisti" },
   "plugins": [
-    { "name": "trava-ia", "source": "./", "description": "Barra comandos de apagar em massa antes de rodar." }
+    { "name": "wipe-guard", "source": "./", "description": "Blocks bulk-delete commands before they run." }
   ]
 }

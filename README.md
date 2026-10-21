@@ -1,77 +1,87 @@
-# trava-ia
+# wipe-guard
 
-Proteção contra IA apagando arquivos. Um arquivo de regras, o `protecao-ia.json`, vira a configuração de segurança do **Claude Code, Codex, Cursor, Copilot CLI e Antigravity**.
+Stop AI coding agents from wiping your files. One rules file, `wipe-guard.json`, becomes the safety config for **Claude Code, Codex, Cursor, Copilot CLI and Antigravity**.
 
-Agentes de IA que rodam comandos no terminal já apagaram discos inteiros no Windows. Na maioria dos casos, um caminho virou a raiz do disco sem ninguém ver: uma variável vazia, um nome curto do Windows (`USUARI~1`) ou o `C:\` convertido para `/c/` no Git Bash. O trava-ia barra esses comandos antes de eles rodarem.
+AI agents that run terminal commands have already wiped entire drives on Windows. In most cases a path silently turned into the drive root: an empty variable, a Windows 8.3 short name (`USERNA~1`), or `C:\` converted to `/c/` by Git Bash. wipe-guard blocks those commands before they run.
 
-## Instalar como plugin do Claude Code
+> Em português: veja [abaixo](#português).
 
-```
-claude plugin install trava-ia --marketplace matheusbattisti/trava-ia
-```
-
-O plugin instala um hook que roda antes de todo comando de terminal (Bash e PowerShell) e barra:
-
-- apagar em massa: `rm -r`, `Remove-Item -Recurse`, `rd /s`, `del /s`, `find -delete`, `git clean -f`, `robocopy /MIR`, `[IO.Directory]::Delete`
-- caminhos que dependem de variável, nome curto do Windows, raiz do disco ou `/c/` do Git Bash
-- os comandos da lista `bloquear` do seu `protecao-ia.json`
-
-Pastas descartáveis (`node_modules`, `dist`, `.next`...) continuam podendo ser apagadas por caminho simples dentro do projeto.
-
-Dentro do Claude Code, `/trava-ia:trava-ia` cria as regras no projeto.
-
-## Instalar como skill (Claude Code, Codex, Cursor e outros)
+## Install as a Claude Code plugin
 
 ```
-npx skills add matheusbattisti/trava-ia
+claude plugin install wipe-guard --marketplace matheusbattisti/wipe-guard
 ```
 
-A skill ensina o agente a criar e atualizar o `protecao-ia.json` com o pacote `trava-ia`.
+The plugin adds a hook that runs before every terminal command (Bash and PowerShell) and blocks:
 
-## Usar com qualquer IA
+- bulk deletes: `rm -r`, `Remove-Item -Recurse`, `rd /s`, `del /s`, `find -delete`, `git clean -f`, `robocopy /MIR`, `[IO.Directory]::Delete`
+- paths built from a variable, Windows short names, drive roots and Git Bash `/c/` paths
+- anything on the `block` list of your `wipe-guard.json`
+
+Disposable folders (`node_modules`, `dist`, `.next`...) can still be deleted by a plain path inside the project.
+
+Inside Claude Code, `/wipe-guard:wipe-guard` sets up the rules in the project.
+
+## Install as a skill (Claude Code, Codex, Cursor and others)
 
 ```
-npx trava-ia init
+npx skills add matheusbattisti/wipe-guard
 ```
 
-Cria o `protecao-ia.json` na pasta atual e gera:
+## Use with any agent
 
-| Ferramenta | Arquivo gerado |
+```
+npx wipe-guard init
+```
+
+Creates `wipe-guard.json` in the current folder and generates:
+
+| Tool | Generated file |
 |---|---|
-| Claude Code | `.claude/settings.json` e o hook em `.claude/hooks/` |
-| Codex | `.codex/config.toml` (sandbox) e `.codex/rules/default.rules` |
+| Claude Code | `.claude/settings.json` and the hook in `.claude/hooks/` |
+| Codex | `.codex/config.toml` (sandbox) and `.codex/rules/default.rules` |
 | Cursor (CLI) | `.cursor/cli.json` |
-| Copilot CLI | `copilot-seguro.ps1` (abre com sandbox e bloqueios) |
-| Antigravity (CLI) | `antigravity-cli-settings.json` (copie para `~/.gemini/antigravity-cli/settings.json`) |
+| Copilot CLI | `copilot-guarded.ps1` (starts it sandboxed with the blocks) |
+| Antigravity (CLI) | `antigravity-cli-settings.json` (copy to `~/.gemini/antigravity-cli/settings.json`) |
 
-Mudou uma regra? Edite o `protecao-ia.json` e rode `npx trava-ia gerar`.
+Changed a rule? Edit `wipe-guard.json` and run `npx wipe-guard generate`.
 
-Conferir um comando sem executar nada:
+Check a command without running anything:
 
 ```
-npx trava-ia checar "rm -rf C:/Users/USUARI~1"
+npx wipe-guard check "rm -rf C:/Users/USERNA~1"
 ```
 
-## O protecao-ia.json
+## wipe-guard.json
 
 ```json
 {
-  "bloquear": ["git clean", "git reset --hard", "Format-Volume", "Clear-Disk", "diskpart"],
-  "perguntar": ["rm", "rmdir", "rd", "del", "erase", "Remove-Item", "robocopy", "git push --force"],
-  "pastasDescartaveis": ["node_modules", ".next", "dist", "build", "out", "coverage", ".turbo", ".cache", ".vite", "tmp", "temp"],
-  "mensagem": "Não apague arquivos em massa pelo terminal. Liste os caminhos exatos que quer apagar e peça para o usuário."
+  "block": ["git clean", "git reset --hard", "Format-Volume", "Clear-Disk", "diskpart"],
+  "ask": ["rm", "rmdir", "rd", "del", "erase", "Remove-Item", "robocopy", "git push --force"],
+  "safeToDelete": ["node_modules", ".next", "dist", "build", "out", "coverage", ".turbo", ".cache", ".vite", "tmp", "temp"]
 }
 ```
 
-## Limites
+Optional keys: `message` (what the agent reads when blocked) and `lang` (`"en"` or `"pt"`; defaults to the system language).
 
-Regras e hooks leem o texto do comando. Eles pegam os casos conhecidos, mas não são uma fronteira de segurança completa. Junte com as outras camadas:
+## Limits
 
-1. **Ambiente separado**: Windows Sandbox, WSL ou máquina virtual.
-2. **Trava da ferramenta**: o trava-ia mais o sandbox da própria ferramenta, quando existe.
-3. **Você aprova**: nada de modo que libera tudo sem perguntar.
-4. **Cópia antes**: commit no git antes de cada tarefa e Histórico de Arquivos do Windows ligado. Apagar pelo terminal não passa pela Lixeira.
+Rules and hooks read the command text. They catch the known cases but are not a complete security boundary. Combine them with:
 
-## Licença
+1. **A separate environment**: Windows Sandbox, WSL or a virtual machine.
+2. **The tool's own guard**: wipe-guard plus the tool's sandbox when it has one.
+3. **You approve**: no mode that runs everything without asking.
+4. **A copy first**: a git commit before each task and Windows File History on. Deleting from the terminal skips the Recycle Bin.
+
+## Português
+
+O wipe-guard impede agentes de IA de apagar seus arquivos. Um arquivo de regras, o `wipe-guard.json`, vira a configuração de segurança do Claude Code, Codex, Cursor, Copilot CLI e Antigravity. As mensagens saem em português quando o sistema está em português, ou com `"lang": "pt"` no arquivo.
+
+- Plugin do Claude Code: `claude plugin install wipe-guard --marketplace matheusbattisti/wipe-guard`
+- Skill: `npx skills add matheusbattisti/wipe-guard`
+- Qualquer IA: `npx wipe-guard init`, e depois de editar as regras, `npx wipe-guard generate`
+- Conferir um comando sem rodar: `npx wipe-guard check "comando"`
+
+## License
 
 MIT

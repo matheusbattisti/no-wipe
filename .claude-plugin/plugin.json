@@ -1,11 +1,11 @@
 {
-  "name": "trava-ia",
-  "displayName": "Trava IA",
-  "version": "1.0.1",
-  "description": "Impede o Claude Code de apagar arquivos em massa no Windows, macOS e Linux: barra rm -rf, Remove-Item -Recurse, rd /s e caminhos que viram a raiz do disco antes de rodar.",
+  "name": "wipe-guard",
+  "displayName": "Wipe Guard",
+  "version": "1.0.0",
+  "description": "Stops Claude Code from bulk-deleting files. Blocks rm -rf, Remove-Item -Recurse, rd /s and paths that silently resolve to a drive root before they run. Built for Windows, works everywhere.",
   "author": { "name": "Matheus Battisti", "url": "https://links.horadecodar.com.br" },
-  "homepage": "https://github.com/matheusbattisti/trava-ia",
-  "repository": "https://github.com/matheusbattisti/trava-ia",
+  "homepage": "https://github.com/matheusbattisti/wipe-guard",
+  "repository": "https://github.com/matheusbattisti/wipe-guard",
   "license": "MIT",
-  "keywords": ["seguranca", "security", "hooks", "windows", "rm-rf", "delete-protection"]
+  "keywords": ["security", "safety", "hooks", "windows", "rm-rf", "delete-protection"]
 }
