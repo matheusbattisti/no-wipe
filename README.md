@@ -1,8 +1,16 @@
-# no-wipe
+<p align="center">
+  <img src="https://raw.githubusercontent.com/matheusbattisti/no-wipe/main/assets/no-wipe-logo.jpg" alt="no-wipe — Keep your files. Guard your terminal." width="880">
+</p>
 
-Stop AI coding agents from wiping your files. One rules file, `no-wipe.json`, becomes the safety config for **Claude Code, Codex, Cursor, Copilot CLI and Antigravity**.
+<h1 align="center">no-wipe</h1>
 
-AI agents that run terminal commands have already wiped entire drives on Windows. In most cases a path silently turned into the drive root: an empty variable, a Windows 8.3 short name (`USERNA~1`), or `C:\` converted to `/c/` by Git Bash. no-wipe blocks those commands before they run.
+<p align="center"><strong>Stop AI coding agents from wiping your files.</strong></p>
+
+**no-wipe** helps protect your work from destructive terminal commands run by AI coding agents. A single rules file, `no-wipe.json`, generates tool-specific safety configuration for **Claude Code, Codex, Cursor, Copilot CLI and Antigravity**.
+
+Define which commands to block, which should require approval, and which disposable folders are safe to delete. Edit the rules once, then regenerate the configuration for your tools.
+
+A path can silently become a drive root: an empty variable, a Windows 8.3 short name (`USERNA~1`), or `C:\` converted to `/c/` by Git Bash. The no-wipe command hook checks for known dangerous patterns and blocks them before they run.
 
 > Em português: veja [abaixo](#português).
 
